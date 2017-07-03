@@ -4,7 +4,7 @@ A program that will emulate all the docking stations, bikes, and infrastructure 
 
 ## Getting started
 
-How to run install it
+How to install it
 
 ## Usage
 
