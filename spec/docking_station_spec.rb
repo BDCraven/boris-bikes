@@ -6,6 +6,8 @@ describe DockingStation do
     # the test is testing if instances respond to the method release_bike
 
     it 'releases working bikes' do
+      bike = Bike.new
+      subject.dock(bike)
       bike = subject.release_bike
       expect(bike).to be_working
     end

@@ -7,11 +7,6 @@ class DockingStation
     @bikes = []
   end
 
-  def release_bike
-    fail 'No bikes available' if @bikes.empty?
-    @bikes.pop
-  end
-
   def dock(bike)
     fail 'Docking station full' if @bikes.count >= 20
     @bike = bike
@@ -20,7 +15,11 @@ class DockingStation
     # in the 'state' of this instance
     @bikes << bike
   end
-
+  
+  def release_bike
+    fail 'No bikes available' if @bikes.empty?
+    @bikes.pop
+  end
   # add to bike method to return the bike we docked
 #  def bike
 #    @bike
