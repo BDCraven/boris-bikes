@@ -1,5 +1,28 @@
 require 'docking_station'
 describe DockingStation do
+  it 'has a default capacity' do
+    expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
+  end
+
+  describe 'initialization' do
+    subject { DockingStation.new }
+    let(:bike) { Bike.new }
+    it 'defaults capacity' do
+      described_class::DEFAULT_CAPACITY.times do
+        subject.dock(bike)
+      end
+      expect{ subject.dock(bike) }.to raise_error 'Docking station full'
+    end
+  end
+
+  describe 'initialization' do
+    it 'has a variable capacity' do
+      docking_station = DockingStation.new(50)
+      50.times { docking_station.dock(Bike.new) }
+      expect{ docking_station.dock(Bike.new) }.to raise_error 'Docking station full'
+    end
+  end
+
   it {is_expected.to respond_to :release_bike }
     # is_expected is defined simply as expect(subject)
     # the subject is instances of the DockingStation class
@@ -14,7 +37,7 @@ describe DockingStation do
 
     it { is_expected.to respond_to(:dock).with(1).argument }
 
-    it { is_expected.to respond_to(:bikes) }
+    # it { is_expected.to respond_to(:bikes) }
 
     it 'docks something' do
       bike = Bike.new
@@ -22,12 +45,12 @@ describe DockingStation do
       expect(subject.dock(bike)).to eq [bike]
     end
 
-    it 'returns docked bikes' do
-      bike = Bike.new
-      subject.dock(bike)
-      #Again we need to return the bike we just docked
-      expect(subject.bikes.pop).to eq bike
-    end
+    # it 'returns docked bikes' do
+      # bike = Bike.new
+      # subject.dock(bike)
+      # Again we need to return the bike we just docked
+      # expect(subject.bikes.pop).to eq bike
+    # end
       # let's upgrade our syntax, to:
       # use a '#' before a method name
       # to imply that it is an instance
@@ -49,7 +72,7 @@ describe DockingStation do
 
     describe '#dock' do
       it 'raises an error when full' do
-        DockingStation::DEFAULT_CAPACITY.times { subject.dock Bike.new }
+        subject.capacity.times { subject.dock Bike.new }
         expect { subject.dock Bike.new }.to raise_error 'Docking station full'
       end
     end
