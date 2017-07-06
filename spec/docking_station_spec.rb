@@ -14,7 +14,7 @@ describe DockingStation do
 
     it { is_expected.to respond_to(:dock).with(1).argument }
 
-    it { is_expected.to respond_to(:bike) }
+    it { is_expected.to respond_to(:bikes) }
 
     it 'docks something' do
       bike = Bike.new
@@ -26,7 +26,7 @@ describe DockingStation do
       bike = Bike.new
       subject.dock(bike)
       #Again we need to return the bike we just docked
-      expect(subject.bike).to eq bike
+      expect(subject.bikes.pop).to eq bike
     end
       # let's upgrade our syntax, to:
       # use a '#' before a method name
