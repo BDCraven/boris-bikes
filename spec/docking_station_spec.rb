@@ -6,7 +6,7 @@ describe DockingStation do
 
   describe 'initialization' do
     subject { DockingStation.new }
-    let(:bike) { Bike.new }
+    let(:bike) { double(:bike) }
     it 'defaults capacity' do
       described_class::DEFAULT_CAPACITY.times do
         subject.dock(bike)
@@ -18,8 +18,8 @@ describe DockingStation do
   describe 'initialization' do
     it 'has a variable capacity' do
       docking_station = DockingStation.new(50)
-      50.times { docking_station.dock(Bike.new) }
-      expect{ docking_station.dock(Bike.new) }.to raise_error 'Docking station full'
+      50.times { docking_station.dock(double(:bike)) }
+      expect{ docking_station.dock(double(:bike)) }.to raise_error 'Docking station full'
     end
   end
 
@@ -28,11 +28,13 @@ describe DockingStation do
     # the subject is instances of the DockingStation class
     # the test is testing if instances respond to the method release_bike
 
+    let(:bike) { double(:bike) }
     it 'releases working bikes' do
-      bike = Bike.new
+      allow(bike).to receive(:working?).and_return(true)
+      allow(bike).to receive(:broken?).and_return(false)
       subject.dock(bike)
-      bike = subject.release_bike
-      expect(bike).to be_working
+      released_bike = subject.release_bike
+      expect(released_bike).to be_working
     end
 
     it { is_expected.to respond_to(:dock).with(1).argument }
@@ -40,7 +42,7 @@ describe DockingStation do
     # it { is_expected.to respond_to(:bikes) }
 
     it 'docks something' do
-      bike = Bike.new
+      bike = double(:bike)
       # we want to return the bike we dock
       expect(subject.dock(bike)).to eq [bike]
     end
@@ -56,8 +58,9 @@ describe DockingStation do
       # to imply that it is an instance
       # method. Also look: nested describes!
     describe '#release_bike' do
+      let(:bike) { double(:bike) }
       it 'releases a bike' do
-      bike = Bike.new
+      allow(bike).to receive(:broken?).and_return(false)
       subject.dock(bike)
       # we want to release the bike we docked
       expect(subject.release_bike).to eq bike
@@ -70,15 +73,16 @@ describe DockingStation do
       end
 
       it 'raises an error when there are no working bikes available' do
-        bike = Bike.new
+        allow(bike).to receive(:report_broken).and_return(true)
+        allow(bike).to receive(:broken?).and_return(true)
         bike.report_broken
         subject.dock(bike)
         expect { subject.release_bike }.to raise_error 'No bikes available'
       end
 
       it 'it should not return bikes that are broken' do
-        bike1 = Bike.new
-        bike2 = Bike.new
+        bike1 = double(:bike, broken?: false)
+        bike2 = double(:bike, report_broken: true, broken?: true)
         bike2.report_broken
         subject.dock(bike1)
         subject.dock(bike2)
@@ -88,8 +92,8 @@ describe DockingStation do
 
     describe '#dock' do
       it 'raises an error when full' do
-        subject.capacity.times { subject.dock Bike.new }
-        expect { subject.dock Bike.new }.to raise_error 'Docking station full'
+        subject.capacity.times { subject.dock double(:bike) }
+        expect { subject.dock double(:bike) }.to raise_error 'Docking station full'
       end
     end
 
