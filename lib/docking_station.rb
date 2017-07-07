@@ -10,9 +10,18 @@ class DockingStation
     @capacity = capacity
   end
 
-  def release_bike
-    fail 'No bikes available' if empty? || bikes.all? { |bike| bike.broken? }
+  def all_bikes_broken?
+    bikes.all? { |bike| bike.broken? }
+  end
+
+  def find_unboken_bike
     bikes.find { |bike| !bike.broken? }
+  end
+
+
+  def release_bike
+    fail 'No bikes available' if empty? || all_bikes_broken?
+    find_unboken_bike
   end
 
   def dock(bike)
