@@ -32,7 +32,7 @@ class DockingStation
     # in the 'state' of this instance
   end
 
-  private
+  # private
 
   attr_reader :bikes
 
